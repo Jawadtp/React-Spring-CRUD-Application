@@ -1,10 +1,30 @@
 import React from 'react'
+import { useState, useEffect } from 'react';
 
-const EmployeesView = (props) => {
+const EmployeesView = () => 
+{
+    const [employees, setEmployees] = useState([])
+
+  async function fetchEmployees()
+  {
+    const response = await fetch('http://localhost:8080/api/v1/employees');
+    const data = await response.json();
+    console.log(data)
+    setEmployees(data)
+    
+    
+  }
+  useEffect(() => 
+  {
+    fetchEmployees()
+   
+  },[]);
+
     return (
         <div className='employeesTableWrapper'>
             <h2 className='text-center'>List of Employees</h2>
             <br/>
+            {!employees.length?'Loading..':
             <table class="table">
                 <thead>
                     <tr>
@@ -17,7 +37,7 @@ const EmployeesView = (props) => {
                 </thead>
                 <tbody>
 
-                    {props.employees.map((employee, index) => {
+                    {employees.map((employee, index) => {
                         return <>
                             <tr>
                                 <th scope="row">{index + 1}</th>
@@ -31,6 +51,7 @@ const EmployeesView = (props) => {
 
                 </tbody>
             </table>
+        }
         </div>
     )
 }
