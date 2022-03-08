@@ -1,7 +1,6 @@
 import './App.css';
 
 import { useState, useEffect } from 'react';
-import EmployeesView from './components/EmployeesView';
 import Navbar from './components/Navbar';
 import {
   BrowserRouter as Router,
@@ -9,20 +8,21 @@ import {
   Routes,
 } from "react-router-dom";
 import AddEmployee from './components/AddEmployee';
+import UpdateEmployee from './components/UpdateEmployee';
+import EmployeesView from './components/EmployeesView';
 
 
-function App() 
-{
-  
+function App() {
+
   return (
     <div className="App">
-      <Navbar/>
+      <Navbar />
 
       <Router>
         <Routes>
-          <Route path="/" element={<EmployeesView/>}/>
-          <Route path="/add-employee" element={<AddEmployee/>}/>
-
+          <Route path="/" element={<EmployeesView/>} />
+          <Route path="/add-employee" element={<AddEmployee />} />
+          <Route path="/employee/:id" element={<UpdateEmployee/>} />
         </Routes>
       </Router>
 

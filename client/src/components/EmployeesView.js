@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const EmployeesView = () => 
 {
@@ -12,8 +13,20 @@ const EmployeesView = () =>
     console.log(data)
     setEmployees(data)
     
-    
   }
+
+  function deleteEmployee(id)
+  {
+    let check = window.confirm("Are you sure you want to delete employee with ID "+id+"? This operation is not reversible.");
+    if(!check) return
+    fetch('http://localhost:8080/api/v1/employee/'+id, { method: 'DELETE' })
+    .then(() => 
+    {
+        console.log("Successfully deleted")
+        window.location.reload();
+    })
+  }
+
   useEffect(() => 
   {
     fetchEmployees()
@@ -40,10 +53,15 @@ const EmployeesView = () =>
                     {employees.map((employee, index) => {
                         return <>
                             <tr>
-                                <th scope="row">{index + 1}</th>
+                                <th scope="row">{employee['id']}</th>
                                 <td>{employee['firstName']}</td>
                                 <td>{employee['lastName']}</td>
                                 <td>{employee['emailId']}</td>
+                                <td>
+                                    <Link to={'/employee/'+employee['id']} class="btn btn-warning">Update</Link>
+                                    <button type="button" onClick={() => deleteEmployee(employee['id'])} class="btn deleteBtn btn-danger">Danger</button>
+                                </td>
+                                
                             </tr>
                         </>
                     })}

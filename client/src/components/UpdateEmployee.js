@@ -1,34 +1,49 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-import { useState } from 'react'
+import { useState} from 'react'
+import { Navigate, useNavigate, useParams } from 'react-router'
 import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router'
 
-const AddEmployee = () => {
-    const navigate = useNavigate()
+const UpdateEmployee = (props) => {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [employee, setEmployee] = useState({ firstName: "", lastName: "", emailId: "" })
 
     async function addEmployee() {
-        const response = await fetch('http://localhost:8080/api/v1/employee', {
-            method: 'POST',
+        const response = await fetch('http://localhost:8080/api/v1/employee/'+id, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(employee)
         });
         console.log(response)
+
+        console.log("Response status is: "+response.status)
         if(response.status===200)
         {
             navigate("/")
         }
     }
 
+    async function fetchEmployeeById()
+    {
+        const response = await fetch('http://localhost:8080/api/v1/employee/'+id);
+        const data = await response.json();
+        setEmployee(data)
+    }
+
+    useEffect(()=> 
+    {
+        console.log("Fetching employee....")
+        fetchEmployeeById()
+    },[])
 
     return (
         <div className="addEmployeeWrapper">
             <form>
                 <div className='text-center'>
-                    Add Employee
+                    Update Employee
                 </div>
                 <div class="form-group">
                     <label for="firstName">First name</label>
@@ -46,11 +61,11 @@ const AddEmployee = () => {
 
                 <br />
                 <Link to="/" class="btn btn-warning">Cancel</Link>
-                <button type="button" onClick={addEmployee} class="btn btn-primary addEmployeeBtn">Add Employee</button>
+                <button type="button" onClick={addEmployee} class="btn btn-primary addEmployeeBtn">Update Employee</button>
 
             </form>
         </div>
     )
 }
 
-export default AddEmployee
+export default UpdateEmployee
